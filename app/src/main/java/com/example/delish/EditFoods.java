@@ -9,12 +9,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.w3c.dom.Text;
+import org.xml.sax.SAXException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class EditFoods extends AppCompatActivity {
     Button getFoodNameButton;
@@ -42,32 +47,34 @@ public class EditFoods extends AppCompatActivity {
         currLayout = (LinearLayout)findViewById(R.id.fragment_create_new_food);
     }
 
-    public void checkIfFoodExists(View view) {
+    public void checkIfFoodExists(View view) throws ParserConfigurationException, SAXException, IOException {
         String foodName = getFoodNameInput.getText().toString();
-        //if the name exists in the database, print out properties that can be changed
-            //set foodToChange to whatever it should be
-            TextView tempText;
-            Button tempButton;
-            numIngredients = foodToEdit.getIngredients().size();
 
-            for(int i = 0; i < numIngredients; i++) {
-                tempText = new TextView(this);
-                tempText.setId(Integer.parseInt("ingredient_at_" + i));
-                tempText.setText(foodToEdit.getIngredients().get(i));
-
-                tempButton = new Button(this);
-                tempButton.setId(i);
-                tempButton.setText("Remove");
-                tempButton.setOnClickListener(this::removeIngredient);
-
-                currLayout.addView(tempText);
-                currLayout.addView(tempButton);
-                i++;
-            }
-            addIngredientButton.setVisibility(View.VISIBLE);
-            newIngredientInput.setVisibility(View.VISIBLE);
-        //otherwise
+        Food newFood = WriteToXML.getFoodFromName(foodName);
+        if(newFood == null) {
             Toast.makeText(this, foodName + " is not listed as a valid food item.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        TextView tempText;
+        Button tempButton;
+        numIngredients = foodToEdit.getIngredients().size();
+
+        for(int i = 0; i < numIngredients; i++) {
+            tempText = new TextView(this);
+            tempText.setId(Integer.parseInt("ingredient_at_" + i));
+            tempText.setText(foodToEdit.getIngredients().get(i));
+
+            tempButton = new Button(this);
+            tempButton.setId(i);
+            tempButton.setText("Remove");
+            tempButton.setOnClickListener(this::removeIngredient);
+
+            currLayout.addView(tempText);
+            currLayout.addView(tempButton);
+            i++;
+        }
+        addIngredientButton.setVisibility(View.VISIBLE);
+        newIngredientInput.setVisibility(View.VISIBLE);
     }
 
     public void addIngredient(View view) {
@@ -99,6 +106,7 @@ public class EditFoods extends AppCompatActivity {
         int id = view.getId();
         String ingredient = ((EditText)findViewById(id)).getText().toString().toLowerCase();
 
+        //try removing an ingredient from the xml file; if it works, remove it from the screen
         boolean successful = WriteToXML.editIngredientsInXml(foodToEdit, ingredient, false);
         if(!successful) {
             Toast.makeText(this, "One or more input is invalid", Toast.LENGTH_SHORT).show();

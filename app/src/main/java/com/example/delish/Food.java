@@ -16,6 +16,13 @@ public class Food {
         //calculateTotalCalories();
     }
 
+    public Food(String name, int numberOfCalories, int numberOfServings, List<String> ingredients) {
+        this.name = name;
+        this.totalCalories = numberOfCalories;
+        this.numberOfServings = numberOfServings;
+        this.ingredients = ingredients;
+    }
+
     /*
     private void calculateTotalCalories() {
         for(String ingredients : this.ingredients) {
@@ -39,6 +46,8 @@ public class Food {
     }
 
     public int getCaloriesPerServing() { return this.totalCalories / this.numberOfServings; }
+
+    public int getNumberOfServings() { return this.numberOfServings; }
 
     public void addIngredient(String ingredient) {
         this.ingredients.add(ingredient);

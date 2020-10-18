@@ -33,6 +33,8 @@ import org.xml.sax.SAXException;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WriteToXML {
     public static final String filePath = "C:\\Users\\Deepti\\source\\repos\\Delish\\app\\src\\main\\java\\com\\example\\delish\\Foods.xml";
@@ -42,6 +44,7 @@ public class WriteToXML {
                 <food>                          -> parentNode
                     <name>soup</name>           -> element
                     <calories>1000</calories>
+                    <servings>1</servings>
                     <ingredient>potato</ingredient>
                     <ingredient>carrot</ingredient>
                 </food>
@@ -140,6 +143,10 @@ public class WriteToXML {
             calories.appendChild(document.createTextNode("" + food.getCaloriesPerServing()));
             parentFood.appendChild(calories);
 
+            Node servings = document.createElement("servings");
+            name.appendChild(document.createTextNode("" + food.getNumberOfServings()));
+            parentFood.appendChild(name);
+
             for(String ingredient : food.getIngredients()) {
                 Node temp = document.createElement("ingredient");
                 temp.appendChild(document.createTextNode(ingredient));
@@ -192,5 +199,53 @@ public class WriteToXML {
         }
 
         return matches;
+    }
+
+    public static Food getFoodFromName(String name) throws IOException, SAXException, ParserConfigurationException {
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document document = documentBuilder.parse(filePath);
+
+            XPathFactory xpathFactory = XPathFactory.newInstance();
+            XPath xpath = xpathFactory.newXPath();
+
+            String xpathStr = "/food_list/food[name = " + name + " ]";
+            if (!checkIfNodeExists(document, xpathStr)) {
+                return null;
+            }
+
+            Node parentFood = (Node) xpath.evaluate(xpathStr, document, XPathConstants.NODE);
+
+            Node calories = parentFood.getFirstChild().getNextSibling();
+            int cal = Integer.parseInt(calories.getTextContent());
+
+            Node servings = parentFood.getFirstChild().getNextSibling();
+            int s = Integer.parseInt(servings.getTextContent());
+
+            Node ingredient = calories.getNextSibling();
+            List<String> ingredients = new ArrayList<String>();
+            while (ingredient != null) {
+                ingredients.add(ingredient.getTextContent());
+                ingredient = ingredient.getNextSibling();
+            }
+
+            return new Food(name, cal, s, ingredients);
+
+        } catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        } catch (TransformerException tfe) {
+            tfe.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } catch (SAXException sae) {
+            sae.printStackTrace();
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

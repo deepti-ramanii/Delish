@@ -84,10 +84,15 @@ public class CreateNewFood extends AppCompatActivity {
             }
         }
         Food newFood = new Food(foodName, numServings, ingredients);
+
+        //try adding the new food to the xml file
         boolean successful = WriteToXML.writeNewFoodToXml(newFood);
+        //if the food already exists, exit
         if(!successful) {
             Toast.makeText(this, newFood.getName() + " already exists.", Toast.LENGTH_SHORT).show();
+            return;
         }
+        Toast.makeText(this, "Successfully added " + newFood.getName(), Toast.LENGTH_SHORT).show();
         removeFields();
     }
 
