@@ -1,5 +1,11 @@
 package com.example.delish;
 
+import android.content.Context;
+import android.widget.Toast;
+
+import androidx.annotation.RequiresPermission;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
@@ -10,6 +16,13 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -22,49 +35,54 @@ import java.io.StringWriter;
 
 public class WriteToXML {
     public static final String filePath = "C:\\Users\\Deepti\\source\\repos\\Delish\\app\\src\\main\\java\\com\\example\\delish\\Foods.xml";
-    public void writeToXMLFile() {
-        try {
-
             /*
             SAMPLE SERIALIZATION:
-                <food name="soup">
+            <food_list>                         -> root
+                <food>                          -> parentNode
+                    <name>soup</name>           -> element
                     <calories>1000</calories>
                     <ingredient>potato</ingredient>
                     <ingredient>carrot</ingredient>
                 </food>
+            </food_list>
+
              */
 
+    public static void editIngredientsInXml(Context context, Food food, String changedIngredient, boolean isAdded ) {
+        try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(filePath);
 
-            // Get food as the first node with elementId "soup"
-            Node food = document.getElementById("soup");
+            XPathFactory xfact = XPathFactory.newInstance();
+            XPath xpath = xfact.newXPath();
+            String xpathStr = "";
 
-            //add a new node "calories" to soup, and set it to 1000
-            Element calories = document.createElement("calories");
-            calories.appendChild(document.createTextNode("1000"));
-            food.appendChild(calories);
+            Node rootElement = document.getElementsByTagName("food_list").item(0);
 
-            // add a new node "ingredient" to soup and set it to potato
-            Element ingredient = document.createElement("ingredient");
-            ingredient.appendChild(document.createTextNode("potato"));
-            food.appendChild(ingredient);
+            xpathStr = "/food_list/food[name = '" + food.getName() + "']";
+            Node parentFood = (Node)xpath.evaluate(xpathStr, document, XPathConstants.NODE);
+            if(parentFood == null) {
+                Toast.makeText(context, food.getName() + " does not exist in the library.", Toast.LENGTH_SHORT);
+                return;
+            }
 
-            //add a new node "ingredient" to soup and set it to carrot
-            Element ingredient2 = document.createElement("ingredient");
-            ingredient2.appendChild(document.createTextNode("carrot"));
-            food.appendChild(ingredient2);
+            //add the ingredient
+            if(isAdded) {
+                Node newIngredient = document.createElement("ingredient");
+                newIngredient.appendChild(document.createTextNode(changedIngredient));
+                parentFood.appendChild(newIngredient);
+            }
 
-            // loop through the food node and modify its children
-            NodeList nodes = food.getChildNodes();
-            for (int i = 0; i < nodes.getLength(); i++) {
-                Node element = nodes.item(i);
-
-                //remove an ingredient if it matches "potato"
-                if ("potato".equals(element.getTextContent())) {
-                    food.removeChild(element);
+            //remove the ingredient if it exists
+            else {
+                xpathStr = "/food_list/food[ingredient = '" + changedIngredient + "']";
+                Node ingredient = (Node)xpath.evaluate(xpathStr, document, XPathConstants.NODE);
+                if(ingredient == null) {
+                    Toast.makeText(context, food.getName() + " does not contain " + changedIngredient, Toast.LENGTH_SHORT);
+                    return;
                 }
+                parentFood.removeChild(ingredient);
             }
 
             // write the DOM object to the file
@@ -86,6 +104,70 @@ public class WriteToXML {
             ioe.printStackTrace();
         } catch (SAXException sae) {
             sae.printStackTrace();
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void writeNewFoodToXml(Context context, Food food) {
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document document = documentBuilder.parse(filePath);
+
+            XPathFactory xfact = XPathFactory.newInstance();
+            XPath xpath = xfact.newXPath();
+            String xpathStr = "";
+
+            Node rootElement = document.getElementsByTagName("food_list").item(0);
+
+            xpathStr = "/food_list/food[name = " + food.getName() + " ]";
+            Node parentFood = (Node)xpath.evaluate(xpathStr, document, XPathConstants.NODE);
+            if(parentFood != null) {
+                Toast.makeText(context, food.getName() + " already exists in the library.", Toast.LENGTH_SHORT);
+                return;
+            }
+
+            parentFood = document.createElement("food");
+            rootElement.appendChild(parentFood);
+
+            // set element name to root element
+            Node name = document.createElement("name");
+            name.appendChild(document.createTextNode(food.getName()));
+            rootElement.appendChild(name);
+
+            // set element calories to root element
+            Node calories = document.createElement("calories");
+            calories.appendChild(document.createTextNode("" + food.getCaloriesPerServing()));
+            rootElement.appendChild(calories);
+
+            for(String ingredient : food.getIngredients()) {
+                Node temp = document.createElement("ingredient");
+                temp.appendChild(document.createTextNode(ingredient));
+                rootElement.appendChild(temp);
+            }
+
+            // write the DOM object to the file
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+
+            DOMSource domSource = new DOMSource(document);
+
+            StreamResult streamResult = new StreamResult(new File(filePath));
+            transformer.transform(domSource, streamResult);
+
+            System.out.println("The XML File was ");
+
+        } catch (ParserConfigurationException pce) {
+            pce.printStackTrace();
+        } catch (TransformerException tfe) {
+            tfe.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        } catch (SAXException sae) {
+            sae.printStackTrace();
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -29,7 +29,7 @@ public class CreateNewFood extends AppCompatActivity {
 
     Button submitFoodButton;
     List<EditText> ingredientNameInputs = new ArrayList<EditText>();
-    Set<String> ingredients = new HashSet<String>();
+    List<String> ingredients = new ArrayList<String>();
 
     LinearLayout currLayout;
 
@@ -84,7 +84,7 @@ public class CreateNewFood extends AppCompatActivity {
             }
         }
         Food newFood = new Food(foodName, numServings, ingredients);
-
+        WriteToXML.writeNewFoodToXml(this, newFood);
         removeFields();
     }
 

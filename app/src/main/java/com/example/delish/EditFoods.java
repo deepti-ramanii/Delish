@@ -12,6 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EditFoods extends AppCompatActivity {
     Button getFoodNameButton;
     EditText getFoodNameInput;
@@ -20,6 +23,9 @@ public class EditFoods extends AppCompatActivity {
     EditText newIngredientInput;
     Food foodToEdit;
 
+    int numIngredients = 0;
+    List<TextView> ingredientsList = new ArrayList<TextView>();
+    List<Button> removeIngredientButtons = new ArrayList<Button>();
     LinearLayout currLayout;
 
     @Override
@@ -41,15 +47,18 @@ public class EditFoods extends AppCompatActivity {
             //set foodToChange to whatever it should be
             TextView tempText;
             Button tempButton;
-            int i = 0;
-            for(String ingredient : foodToEdit.getIngredients()) {
+            numIngredients = foodToEdit.getIngredients().size();
+
+            for(int i = 0; i < numIngredients; i++) {
                 tempText = new TextView(this);
+                tempText.setId(Integer.parseInt("ingredient_at_" + i));
+                tempText.setText(foodToEdit.getIngredients().get(i));
+
                 tempButton = new Button(this);
-                tempText.setId(i);
-                tempButton.setId(i + foodToEdit.getIngredients().size());
-                tempText.setText(ingredient);
+                tempButton.setId(i);
                 tempButton.setText("Remove");
                 tempButton.setOnClickListener(this::removeIngredient);
+
                 currLayout.addView(tempText);
                 currLayout.addView(tempButton);
                 i++;
@@ -64,6 +73,18 @@ public class EditFoods extends AppCompatActivity {
         String ingredient = ((EditText)findViewById(R.id.new_ingredient)).getText().toString().toLowerCase();
         //if ingredient is valid
             foodToEdit.getIngredients().add(ingredient);
+
+            TextView tempText = new TextView(this);
+            tempText.setId(Integer.parseInt("ingredient_at_" + numIngredients));
+            tempText.setText(ingredient);
+
+            Button tempButton = new Button(this);
+            tempButton.setId(numIngredients);
+            tempButton.setText("Remove");
+            tempButton.setOnClickListener(this::removeIngredient);
+            currLayout.addView(tempText);
+
+            numIngredients++;
         //otherwise
             Toast.makeText(this, ingredient + " is not listed as a valid food item.", Toast.LENGTH_SHORT);
     }
@@ -73,8 +94,11 @@ public class EditFoods extends AppCompatActivity {
         String ingredient = ((EditText)findViewById(id)).getText().toString().toLowerCase();
         //if ingredient is valid
             foodToEdit.getIngredients().remove(ingredient);
+
+            currLayout.removeView(findViewById(Integer.parseInt("ingredient_at_" + id)));
             currLayout.removeView(findViewById(id));
-            currLayout.removeView(findViewById(id + foodToEdit.getIngredients().size()));
+
+            numIngredients--;
         //otherwise
             Toast.makeText(this, ingredient + " is not listed as a valid food item.", Toast.LENGTH_SHORT);
     }
