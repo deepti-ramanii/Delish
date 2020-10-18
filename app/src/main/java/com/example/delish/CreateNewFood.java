@@ -1,10 +1,12 @@
 package com.example.delish;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,10 +71,21 @@ public class CreateNewFood extends AppCompatActivity {
     public void submitFood(View view) {
         foodName = getFoodNameInput.getText().toString().toLowerCase();
         numServings = Integer.parseInt(getNumServingsInput.getText().toString());
+
+        ingredients.clear();
         for(int i = 0; i < numIngredients; i++) {
-            ingredients.add(ingredientNameInputs.get(i).getText().toString().toLowerCase());
-            currLayout.removeView((EditText)findViewById(i));
+            String ingredient = ingredientNameInputs.get(i).getText().toString().toLowerCase();
+            if(true) {
+                ingredients.add(ingredient);
+            } else {
+                Toast.makeText(this, ingredient + " is not listed as a valid food item.", Toast.LENGTH_SHORT);
+                return;
+            }
         }
         Food newFood = new Food(foodName, numServings, ingredients);
+
+        for(int i = 0; i < numIngredients; i++) {
+            currLayout.removeView((EditText)findViewById(i));
+        }
     }
 }

@@ -1,11 +1,14 @@
 package com.example.delish;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
@@ -44,13 +47,23 @@ public class LogNewMeal extends AppCompatActivity {
             temp.setId(i);
             temp.setHint("Enter food item " + (i + 1));
             foodNameInputs.add(temp);
+            currLayout.addView(temp);
         }
     }
 
     public void submitMeal(View view) {
         foodNames.clear();
         for (int i = 0; i < numFoods; i++) {
-            foodNames.add(foodNameInputs.get(i).getText().toString().toLowerCase());
+            String foodName = foodNameInputs.get(i).getText().toString().toLowerCase();
+            if(true) {
+                foodNames.add(foodName);
+            } else {
+                Toast.makeText(this, foodName + " is not listed as a valid food item.", Toast.LENGTH_SHORT);
+                return;
+            }
+        }
+
+        for(int i = 0; i < numFoods; i++) {
             currLayout.removeView((EditText)findViewById(i));
         }
     }

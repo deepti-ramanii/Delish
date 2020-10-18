@@ -35,46 +35,6 @@
         android:text="@string/go"
         android:onClick="setNumIngredients"/>
 
-    <EditText
-        android:id="@+id/ingredient_input_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/enter_ingredient_1"
-        android:inputType="text"/>
-
-    <EditText
-        android:id="@+id/ingredient_input_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/enter_ingredient_2"
-        android:inputType="text"/>
-
-    <EditText
-        android:id="@+id/ingredient_input_3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/enter_ingredient_3"
-        android:inputType="text"/>
-
-    <EditText
-        android:id="@+id/ingredient_input_4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/enter_ingredient_4"
-        android:inputType="text"/>
-
-    <EditText
-        android:id="@+id/ingredient_input_5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/enter_ingredient_1"
-        android:inputType="text"/>
-
     <Button
         android:id="@+id/submit_food_button"
         android:layout_width="wrap_content"
