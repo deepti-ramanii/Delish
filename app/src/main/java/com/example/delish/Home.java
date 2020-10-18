@@ -29,7 +29,7 @@ public class Home extends Fragment {
         goToCreateNewFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_home2_to_createNewFood);
+                //Navigation.findNavController(view).navigate(R.id.);
             }
         });
 
@@ -37,7 +37,7 @@ public class Home extends Fragment {
         goToLogNewMeal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_home2_to_logNewMeal);
+                //Navigation.findNavController(view).navigate(R.id.);
             }
         });
 

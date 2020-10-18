@@ -1,78 +1,56 @@
 package com.example.delish;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-
-import java.lang.reflect.Array;
+import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LogNewMeal extends Fragment {
+public class LogNewMeal extends AppCompatActivity {
     Button getNumFoodsButton;
     EditText getNumFoodsInput;
-    int numFoods = 0;
+    int numFoods;
 
     Button submitMealButton;
     List<EditText> foodNameInputs = new ArrayList<EditText>();
     List<String> foodNames = new ArrayList<String>();
 
+    LinearLayout currLayout;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_log_new_meal);
+
+        getNumFoodsButton = (Button)findViewById(R.id.get_num_foods_button);
+        getNumFoodsInput = (EditText)findViewById(R.id.get_num_foods);
+        submitMealButton = (Button)findViewById(R.id.submit_meal_button);
+
+        currLayout = (LinearLayout)findViewById(R.id.fragment_log_new_meal);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_log_new_meal, container, false);
+    public void setNumFoods(View view) {
+        numFoods = Integer.parseInt(getNumFoodsInput.getText().toString());
+        foodNameInputs.clear();
 
-        getNumFoodsButton = (Button)view.findViewById(R.id.get_num_foods_button);
-        getNumFoodsInput = (EditText)view.findViewById(R.id.get_num_foods);
+        EditText temp;
+        for(int i = 0; i < numFoods; i++) {
+            temp = new EditText(this);
+            temp.setId(i);
+            temp.setHint("Enter food item " + (i + 1));
+            foodNameInputs.add(temp);
+        }
+    }
 
-        getNumFoodsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                numFoods = Integer.parseInt(getNumFoodsInput.getText().toString());
-                /*
-                TODO: get variable number of ingredients working
-                EditText temp;
-                for(int i = 0; i < numFoods; i++) {
-                    temp = view.findViewById(R.id.food_name_input_1);
-                    temp.setId(i);
-                    temp.setHint("Enter food item " + (i + 1));
-                    layout = (LinearLayout)getActivity().findViewById(R.id.logNewMeal);
-                    layout.addView(temp);
-                }
-                */
-                foodNameInputs.add((EditText)view.findViewById(R.id.food_name_input_1));
-                foodNameInputs.add((EditText)view.findViewById(R.id.food_name_input_2));
-                foodNameInputs.add((EditText)view.findViewById(R.id.food_name_input_3));
-                foodNameInputs.add((EditText)view.findViewById(R.id.food_name_input_4));
-                foodNameInputs.add((EditText)view.findViewById(R.id.food_name_input_5));
-            }
-        });
-        
-        submitMealButton = (Button) view.findViewById(R.id.submit_meal_button);
-        submitMealButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (int i = 0; i < numFoods; i++) {
-                    foodNames.add(foodNameInputs.get(i).getText().toString().toLowerCase());
-                }
-            }
-        });
-
-        return view;
+    public void submitMeal(View view) {
+        foodNames.clear();
+        for (int i = 0; i < numFoods; i++) {
+            foodNames.add(foodNameInputs.get(i).getText().toString().toLowerCase());
+        }
     }
 }

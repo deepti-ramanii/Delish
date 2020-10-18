@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/get_food_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/enter_food_name"
+        android:inputType="text"/>
+
+    <Button
+        android:id="@+id/get_food_name_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/submit"
+        android:onClick="checkIfFoodExists"/>
+
+    <EditText
+        android:id="@+id/get_ingredient_to_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/enter_ingredient_to_change"
+        android:inputType="text"
+        android:visibility="invisible"/>
+
+    <Button
+        android:id="@+id/add_ingredient_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add"
+        android:visibility="invisible"
+        android:onClick="addIngredient"/>
+
+    <Button
+        android:id="@+id/remove_ingredient_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remove"
+        android:visibility="invisible"
+        android:onClick="removeIngredient"/>
+
+</LinearLayout>

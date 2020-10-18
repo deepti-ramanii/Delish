@@ -17,4 +17,7 @@
     <string name="enter_number_of_ingredients">Enter number of ingredients.</string>
     <string name="enter_food_name">Enter food name</string>
     <string name="enter_number_of_servings">Enter number of servings</string>
+    <string name="enter_ingredient_to_change">Enter ingredient to change.</string>
+    <string name="add">Add</string>
+    <string name="remove">Remove</string>
 </resources>
