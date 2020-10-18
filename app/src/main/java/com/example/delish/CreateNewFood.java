@@ -11,10 +11,15 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class CreateNewFood extends AppCompatActivity {
     EditText getFoodNameInput;
@@ -69,7 +74,7 @@ public class CreateNewFood extends AppCompatActivity {
         }
     }
 
-    public void submitFood(View view) {
+    public void submitFood(View view) throws ParserConfigurationException, SAXException, IOException {
         foodName = getFoodNameInput.getText().toString().toLowerCase();
         numServings = Integer.parseInt(getNumServingsInput.getText().toString());
 

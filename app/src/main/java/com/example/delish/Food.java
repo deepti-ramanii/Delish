@@ -1,6 +1,11 @@
 package com.example.delish;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 public class Food {
     private String name;
@@ -8,12 +13,11 @@ public class Food {
     private List<String> ingredients;
     private int totalCalories;
 
-    public Food(String name, int numberOfServings, List<String> ingredients) {
+    public Food(String name, int numberOfServings, List<String> ingredients) throws IOException, SAXException, ParserConfigurationException {
         this.name = name;
         this.numberOfServings = numberOfServings;
         this.ingredients = ingredients;
-
-        //calculateTotalCalories();
+        calculateTotalCalories();
     }
 
     public Food(String name, int numberOfCalories, int numberOfServings, List<String> ingredients) {
@@ -23,19 +27,12 @@ public class Food {
         this.ingredients = ingredients;
     }
 
-    /*
-    private void calculateTotalCalories() {
+    private void calculateTotalCalories() throws ParserConfigurationException, SAXException, IOException {
         for(String ingredients : this.ingredients) {
-            read from the list of ingredients
-            int caloriesInIngredient = ____;
-            this.totalCalories += caloriesInIngredient;
+            Food ing = WriteToXML.getFoodFromName(this.name);
+            this.totalCalories += ing.totalCalories;
         }
     }
-
-    public int getCaloriesPerServing() {
-        return this.totalCalories / this.numberOfServings;
-    }
-    */
 
     public String getName() {
         return this.name;
