@@ -6,6 +6,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Will take input from the user to log a new food in the future"/>
+        android:text="@string/will_take_input_from_the_user_to_log_a_new_food_in_the_future"/>
 
 </LinearLayout>
