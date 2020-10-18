@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/createNewFood">
+
+    <fragment
+        android:id="@+id/createNewFood"
+        android:name="com.example.delish.CreateNewFood"
+        android:label="CreateNewFood" />
+    <fragment
+        android:id="@+id/logNewMeal"
+        android:name="com.example.delish.LogNewMeal"
+        android:label="LogNewMeal" />
+    <fragment
+        android:id="@+id/home2"
+        android:name="com.example.delish.Home"
+        android:label="Home" >
+        <action
+            android:id="@+id/action_home2_to_createNewFood"
+            app:destination="@id/createNewFood" />
+        <action
+            android:id="@+id/action_home2_to_logNewMeal"
+            app:destination="@id/logNewMeal" />
+    </fragment>
+</navigation>
