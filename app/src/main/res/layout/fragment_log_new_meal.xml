@@ -4,6 +4,13 @@
     android:layout_height="match_parent"
     android:id="@+id/fragment_log_new_meal">
 
+    <Button
+        android:id="@+id/go_to_create_new_food"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/go_to_create_new_food"
+        android:onClick="toCreateNewFood"/>
+
     <EditText
         android:id="@+id/get_num_foods"
         android:layout_width="wrap_content"
@@ -31,6 +38,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Return Home"
-        android:onClick="toHomePage"/>
+        android:onClick="toLogNewMeal"/>
+
 
 </LinearLayout>

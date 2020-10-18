@@ -1,5 +1,7 @@
 package com.example.delish;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,17 +12,16 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LogNewMeal extends AppCompatActivity {
-    Button getNumFoodsButton;
     EditText getNumFoodsInput;
     int numFoods;
 
-    Button submitMealButton;
-    List<EditText> foodNameInputs = new ArrayList<EditText>();
+    List<Integer> foodNameInputs = new ArrayList<Integer>();
     List<String> foodNames = new ArrayList<String>();
 
     LinearLayout currLayout;
@@ -30,40 +31,44 @@ public class LogNewMeal extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_log_new_meal);
 
-        getNumFoodsButton = (Button)findViewById(R.id.get_num_foods_button);
         getNumFoodsInput = (EditText)findViewById(R.id.get_num_foods);
-        submitMealButton = (Button)findViewById(R.id.submit_meal_button);
 
         currLayout = (LinearLayout)findViewById(R.id.fragment_log_new_meal);
     }
 
+    public void toCreateNewFood(View view) {
+        Intent switchActivityIntent = new Intent(LogNewMeal.this, CreateNewFood.class);
+        startActivity(switchActivityIntent);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void setNumFoods(View view) {
+        removeFields();
         numFoods = Integer.parseInt(getNumFoodsInput.getText().toString());
         foodNameInputs.clear();
-        removeFields();
 
         EditText temp;
         for(int i = 0; i < numFoods; i++) {
             temp = new EditText(this);
-            temp.setId(i);
+            int id = View.generateViewId();
+            temp.setId(id);
             temp.setHint("Enter food item " + (i + 1));
-            foodNameInputs.add(temp);
+            foodNameInputs.add(id);
             currLayout.addView(temp);
         }
     }
 
     public void submitMeal(View view) {
         foodNames.clear();
-        for (int i = 0; i < numFoods; i++) {
-            String foodName = foodNameInputs.get(i).getText().toString().toLowerCase();
-            if(true) {
+        for (int id : foodNameInputs) {
+            String foodName = ((EditText)findViewById(id)).getText().toString().toLowerCase();
+            if(true) {  //TODO: check if foodName is a valid food
                 foodNames.add(foodName);
             } else {
                 Toast.makeText(this, foodName + " is not listed as a valid food item.", Toast.LENGTH_SHORT);
                 return;
             }
         }
-
         removeFields();
     }
 
@@ -73,9 +78,9 @@ public class LogNewMeal extends AppCompatActivity {
     }
 
     private void removeFields() {
-        for(int i = 0; i < numFoods; i++) {
-            if((EditText)findViewById(i) != null) {
-                currLayout.removeView((EditText) findViewById(i));
+        for(int id : foodNameInputs) {
+            if((EditText)findViewById(id) != null) {
+                currLayout.removeView((EditText) findViewById(id));
             }
         }
     }

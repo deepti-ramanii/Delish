@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Home extends AppCompatActivity {
-    Button goToCreateNewFood;
     Button goToLogNewMeal;
     Button goToEditFood;
 
@@ -17,14 +16,7 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_home);
 
-        goToCreateNewFood = (Button)findViewById(R.id.go_to_create_new_food);
-        goToCreateNewFood.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent switchActivityIntent = new Intent(Home.this, CreateNewFood.class);
-                startActivity(switchActivityIntent);
-            }
-        });
+
 
         goToLogNewMeal = (Button)findViewById(R.id.go_to_log_new_meal);
         goToLogNewMeal.setOnClickListener(new View.OnClickListener() {

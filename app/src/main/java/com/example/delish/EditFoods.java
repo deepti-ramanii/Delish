@@ -67,7 +67,7 @@ public class EditFoods extends AppCompatActivity {
             tempButton = new Button(this);
             tempButton.setId(i);
             tempButton.setText("Remove");
-            tempButton.setOnClickListener(this::removeIngredient);
+            //tempButton.setOnClickListener(this::removeIngredient);
 
             currLayout.addView(tempText);
             currLayout.addView(tempButton);
@@ -77,48 +77,44 @@ public class EditFoods extends AppCompatActivity {
         newIngredientInput.setVisibility(View.VISIBLE);
     }
 
-    public void addIngredient(View view) {
+    public void addIngredient(View view) throws Exception {
         String ingredient = ((EditText)findViewById(R.id.new_ingredient)).getText().toString().toLowerCase();
 
-        //try adding ingredients to xml file; if it works, add it to the screen
-        boolean successful = WriteToXML.editIngredientsInXml(foodToEdit, ingredient, true);
-        if(!successful) {
-            Toast.makeText(this, "One or more input is invalid", Toast.LENGTH_SHORT).show();
-            return;
+        if(WriteToXML.nodeExists("/food_list/food[ingredient = " + ingredient + " ]")) {
+            //add to xml
+            foodToEdit.getIngredients().add(ingredient);
+
+            TextView tempText = new TextView(this);
+            tempText.setId(Integer.parseInt("ingredient_at_" + numIngredients));
+            tempText.setText(ingredient);
+
+            Button tempButton = new Button(this);
+            tempButton.setId(numIngredients);
+            tempButton.setText("Remove");
+            //tempButton.setOnClickListener(this::removeIngredient);
+            currLayout.addView(tempText);
+
+            numIngredients++;
+        } else {
+            Toast.makeText(this, ingredient + " is not a valid ingredient.", Toast.LENGTH_SHORT).show();
         }
-
-        foodToEdit.getIngredients().add(ingredient);
-
-        TextView tempText = new TextView(this);
-        tempText.setId(Integer.parseInt("ingredient_at_" + numIngredients));
-        tempText.setText(ingredient);
-
-        Button tempButton = new Button(this);
-        tempButton.setId(numIngredients);
-        tempButton.setText("Remove");
-        tempButton.setOnClickListener(this::removeIngredient);
-        currLayout.addView(tempText);
-
-        numIngredients++;
     }
 
-    public void removeIngredient(View view) {
+    public void removeIngredient(View view) throws Exception {
         int id = view.getId();
         String ingredient = ((EditText)findViewById(id)).getText().toString().toLowerCase();
 
-        //try removing an ingredient from the xml file; if it works, remove it from the screen
-        boolean successful = WriteToXML.editIngredientsInXml(foodToEdit, ingredient, false);
-        if(!successful) {
-            Toast.makeText(this, "One or more input is invalid", Toast.LENGTH_SHORT).show();
-            return;
+        if(WriteToXML.nodeExists("/food_list/food[ingredient = " + ingredient + " ]")) {
+            //remove from xml
+            foodToEdit.getIngredients().remove(ingredient);
+
+            currLayout.removeView(findViewById(Integer.parseInt("ingredient_at_" + id)));
+            currLayout.removeView(findViewById(id));
+
+            numIngredients--;
+        } else {
+            Toast.makeText(this, ingredient + " is not an ingredient in this food.", Toast.LENGTH_SHORT).show();
         }
-
-        foodToEdit.getIngredients().add(ingredient);
-
-        currLayout.removeView(findViewById(Integer.parseInt("ingredient_at_" + id)));
-        currLayout.removeView(findViewById(id));
-
-        numIngredients--;
     }
 
     public void returnToHome() {

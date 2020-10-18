@@ -28,8 +28,8 @@ public class Food {
     }
 
     private void calculateTotalCalories() throws ParserConfigurationException, SAXException, IOException {
-        for(String ingredients : this.ingredients) {
-            Food ing = WriteToXML.getFoodFromName(this.name);
+        for(String ingredient : this.ingredients) {
+            Food ing = WriteToXML.getFoodFromName(ingredient);
             this.totalCalories += ing.totalCalories;
         }
     }

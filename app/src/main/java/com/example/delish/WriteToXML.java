@@ -1,12 +1,5 @@
 package com.example.delish;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.widget.Toast;
-
-import androidx.annotation.RequiresPermission;
-import androidx.appcompat.app.AppCompatActivity;
-
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
@@ -23,112 +16,25 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class WriteToXML {
-    public static final String filePath = "C:\\Users\\Deepti\\source\\repos\\Delish\\app\\src\\main\\java\\com\\example\\delish\\Foods.xml";
-            /*
-            SAMPLE SERIALIZATION:
-            <food_list>                         -> root
-                <food>                          -> parentNode
-                    <name>soup</name>           -> element
-                    <calories>1000</calories>
-                    <servings>1</servings>
-                    <ingredient>potato</ingredient>
-                    <ingredient>carrot</ingredient>
-                </food>
-            </food_list>
+    public static final String filePath = "Foods.xml";
 
-             */
-
-    public static boolean editIngredientsInXml(Food food, String changedIngredient, boolean isAdded ) {
+    public static void writeNewFoodToXml(Food food) {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory.setNamespaceAware(true);
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(filePath);
-
-            XPathFactory xpathFactory = XPathFactory.newInstance();
-            XPath xpath = xpathFactory.newXPath();
-            String xpathStr = "";
-
-            //if the node doesn't exist, exit and return false
-            xpathStr = "/food_list/food[name = " + food.getName() + " ]";
-            if(!checkIfNodeExists(document, xpathStr)) {
-                return false;
-            }
-
-            Node parentFood = (Node) xpath.evaluate(xpathStr, document, XPathConstants.NODE);
-
-            //add the ingredient
-            if(isAdded) {
-                Node newIngredient = document.createElement("ingredient");
-                newIngredient.appendChild(document.createTextNode(changedIngredient));
-                parentFood.appendChild(newIngredient);
-            }
-
-            //remove the ingredient if it exists
-            else {
-                xpathStr = "/food_list/food[ingredient = '" + changedIngredient + "']";
-                //if the ingredient doesn't exist, exit and return false
-                if(!checkIfNodeExists(document, xpathStr)) {
-                    return false;
-                }
-
-                Node ingredient = (Node)xpath.evaluate(xpathStr, document, XPathConstants.NODE);
-                parentFood.removeChild(ingredient);
-            }
-
-            // write the DOM object to the file
-            TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            Transformer transformer = transformerFactory.newTransformer();
-
-            DOMSource domSource = new DOMSource(document);
-
-            StreamResult streamResult = new StreamResult(new File(filePath));
-            transformer.transform(domSource, streamResult);
-
-            System.out.println("The XML File was ");
-
-        } catch (ParserConfigurationException pce) {
-            pce.printStackTrace();
-        } catch (TransformerException tfe) {
-            tfe.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        } catch (SAXException sae) {
-            sae.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-    public static boolean writeNewFoodToXml(Food food) {
-        try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(filePath);
-
-            String xpathStr = "";
 
             Node rootElement = document.getElementsByTagName("food_list").item(0);
-
-            //if the food already exists, return false and exit
-            xpathStr = "/food_list/food[name = " + food.getName() + " ]";
-            if(checkIfNodeExists(document, xpathStr)) {
-                return false;
-            }
 
             Node parentFood = document.createElement("food");
             rootElement.appendChild(parentFood);
@@ -172,46 +78,23 @@ public class WriteToXML {
             ioe.printStackTrace();
         } catch (SAXException sae) {
             sae.printStackTrace();
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
     }
 
-    private static boolean checkIfNodeExists(Document document, String xpathExpression) throws Exception
-    {
-        boolean matches = false;
-
-        XPathFactory xpathFactory = XPathFactory.newInstance();
-        XPath xpath = xpathFactory.newXPath();
-
-        try {
-            XPathExpression expr = xpath.compile(xpathExpression);
-            NodeList nodes = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
-            if(nodes != null  && nodes.getLength() > 0) {
-                matches = true;
-            }
-
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
-        }
-
-        return matches;
-    }
-
-    public static Food getFoodFromName(String name) throws IOException, SAXException, ParserConfigurationException {
+    public static Food getFoodFromName(String name) {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory.setNamespaceAware(true);
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(filePath);
 
             XPathFactory xpathFactory = XPathFactory.newInstance();
             XPath xpath = xpathFactory.newXPath();
 
-            String xpathStr = "/food_list/food[name = " + name + " ]";
-            if (!checkIfNodeExists(document, xpathStr)) {
+            String xpathStr = "//food[name='" + name + "']";
+            if (!nodeExists(xpathStr)) {
                 return null;
             }
 
@@ -247,5 +130,31 @@ public class WriteToXML {
         }
 
         return null;
+    }
+
+    public static boolean nodeExists(String xpathExpression) throws Exception
+    {
+        boolean matches = false;
+
+        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setNamespaceAware(true);
+        DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+        Document document = documentBuilder.parse(filePath);
+
+        XPathFactory xpathFactory = XPathFactory.newInstance();
+        XPath xpath = xpathFactory.newXPath();
+
+        try {
+            XPathExpression expr = xpath.compile(xpathExpression);
+            NodeList nodes = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
+            if(nodes != null  && nodes.getLength() > 0) {
+                matches = true;
+            }
+
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
+
+        return matches;
     }
 }
