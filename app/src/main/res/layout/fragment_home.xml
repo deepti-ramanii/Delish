@@ -4,9 +4,15 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/test_button"
+        android:id="@+id/go_to_log_new_meal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/this_is_a_test_button" />
+        android:text="@string/go_to_log_new_meal" />
+
+    <Button
+        android:id="@+id/go_to_create_new_food"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/go_to_create_new_food" />
 
 </LinearLayout>

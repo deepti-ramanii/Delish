@@ -3,4 +3,6 @@
     <string name="will_take_input_from_the_user_to_make_a_new_food_item_in_the_future">Will take input from the user to make a new food item in the future</string>
     <string name="this_is_a_test_button">This is a test button</string>
     <string name="will_take_input_from_the_user_to_log_a_new_food_in_the_future">Will take input from the user to log a new food in the future</string>
+    <string name="go_to_log_new_meal">Go To Log New Meal</string>
+    <string name="go_to_create_new_food">Go TO Create New Food</string>
 </resources>
