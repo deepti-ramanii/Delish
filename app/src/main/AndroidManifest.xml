@@ -19,6 +19,10 @@
         </activity>
 
         <activity
+            android:name="com.example.delish.EditFoods">
+        </activity>
+
+        <activity
             android:name="com.example.delish.Home"
             android:label="Delish" >
             <intent-filter>
