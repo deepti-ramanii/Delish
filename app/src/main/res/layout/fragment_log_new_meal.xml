@@ -3,9 +3,64 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/will_take_input_from_the_user_to_log_a_new_food_in_the_future"/>
+    <EditText
+        android:id="@+id/get_num_foods"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/enter_number_of_foods_to_log"
+        android:inputType="text"/>
+
+    <Button
+        android:id="@+id/get_num_foods_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/go"/>
+
+    <EditText
+        android:id="@+id/food_name_input_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/enter_food_item_1"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/food_name_input_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/enter_food_item_2"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/food_name_input_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/enter_food_item_3"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/food_name_input_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/enter_food_item_4"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/food_name_input_5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/enter_food_item_5"
+        android:inputType="text"/>
+
+    <Button
+        android:id="@+id/submit_meal_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/submit"/>
 
 </LinearLayout>
