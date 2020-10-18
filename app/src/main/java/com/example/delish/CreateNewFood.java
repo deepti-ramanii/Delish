@@ -1,19 +1,14 @@
 package com.example.delish;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -76,6 +71,7 @@ public class CreateNewFood extends AppCompatActivity {
         numServings = Integer.parseInt(getNumServingsInput.getText().toString());
         for(int i = 0; i < numIngredients; i++) {
             ingredients.add(ingredientNameInputs.get(i).getText().toString().toLowerCase());
+            currLayout.removeView((EditText)findViewById(i));
         }
         Food newFood = new Food(foodName, numServings, ingredients);
     }

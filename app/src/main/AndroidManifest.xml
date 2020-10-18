@@ -11,7 +11,15 @@
         android:theme="@style/Theme.Delish">
 
         <activity
-            android:name="com.example.delish.MainActivity"
+            android:name="com.example.delish.CreateNewFood">
+        </activity>
+
+        <activity
+            android:name="com.example.delish.LogNewMeal">
+        </activity>
+
+        <activity
+            android:name="com.example.delish.Home"
             android:label="Delish" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

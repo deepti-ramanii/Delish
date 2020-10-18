@@ -51,6 +51,7 @@ public class LogNewMeal extends AppCompatActivity {
         foodNames.clear();
         for (int i = 0; i < numFoods; i++) {
             foodNames.add(foodNameInputs.get(i).getText().toString().toLowerCase());
+            currLayout.removeView((EditText)findViewById(i));
         }
     }
 }

@@ -1,46 +1,37 @@
 package com.example.delish;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class Home extends Fragment {
+public class Home extends AppCompatActivity {
     Button goToCreateNewFood;
     Button goToLogNewMeal;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
+        setContentView(R.layout.fragment_home);
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        goToCreateNewFood = (Button) view.findViewById(R.id.go_to_create_new_food);
+        goToCreateNewFood = (Button)findViewById(R.id.go_to_create_new_food);
         goToCreateNewFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Navigation.findNavController(view).navigate(R.id.);
+                Intent switchActivityIntent = new Intent(Home.this, CreateNewFood.class);
+                startActivity(switchActivityIntent);
             }
         });
 
-        goToLogNewMeal = (Button) view.findViewById(R.id.go_to_log_new_meal);
+        goToLogNewMeal = (Button)findViewById(R.id.go_to_log_new_meal);
         goToLogNewMeal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Navigation.findNavController(view).navigate(R.id.);
+                Intent switchActivityIntent = new Intent(Home.this, LogNewMeal.class);
+                startActivity(switchActivityIntent);
             }
         });
-
-        return view;
     }
 }
