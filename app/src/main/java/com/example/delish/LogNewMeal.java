@@ -40,6 +40,7 @@ public class LogNewMeal extends AppCompatActivity {
     public void setNumFoods(View view) {
         numFoods = Integer.parseInt(getNumFoodsInput.getText().toString());
         foodNameInputs.clear();
+        removeFields();
 
         EditText temp;
         for(int i = 0; i < numFoods; i++) {
@@ -63,8 +64,19 @@ public class LogNewMeal extends AppCompatActivity {
             }
         }
 
+        removeFields();
+    }
+
+    public void toHomePage(View view) {
+        finish();
+        removeFields();
+    }
+
+    private void removeFields() {
         for(int i = 0; i < numFoods; i++) {
-            currLayout.removeView((EditText)findViewById(i));
+            if((EditText)findViewById(i) != null) {
+                currLayout.removeView((EditText) findViewById(i));
+            }
         }
     }
 }

@@ -57,6 +57,7 @@ public class CreateNewFood extends AppCompatActivity {
     public void setNumIngredients(View view) {
         numIngredients = Integer.parseInt(getNumIngredientsInput.getText().toString());
         ingredientNameInputs.clear();
+        removeFields();
 
         EditText temp;
         for(int i = 0; i < numIngredients; i++) {
@@ -84,8 +85,19 @@ public class CreateNewFood extends AppCompatActivity {
         }
         Food newFood = new Food(foodName, numServings, ingredients);
 
+        removeFields();
+    }
+
+    public void toHomePage(View view) {
+        removeFields();
+        finish();
+    }
+
+    private void removeFields() {
         for(int i = 0; i < numIngredients; i++) {
-            currLayout.removeView((EditText)findViewById(i));
+            if((EditText)findViewById(i) != null) {
+                currLayout.removeView((EditText) findViewById(i));
+            }
         }
     }
 }
