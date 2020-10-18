@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class Home extends AppCompatActivity {
     Button goToCreateNewFood;
     Button goToLogNewMeal;
+    Button goToEditFood;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,6 +31,15 @@ public class Home extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent switchActivityIntent = new Intent(Home.this, LogNewMeal.class);
+                startActivity(switchActivityIntent);
+            }
+        });
+
+        goToEditFood = (Button)findViewById(R.id.go_to_edit_food);
+        goToEditFood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent switchActivityIntent = new Intent(Home.this, EditFoods.class);
                 startActivity(switchActivityIntent);
             }
         });
