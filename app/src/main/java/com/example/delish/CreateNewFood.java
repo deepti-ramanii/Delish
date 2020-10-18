@@ -79,12 +79,15 @@ public class CreateNewFood extends AppCompatActivity {
             if(true) {
                 ingredients.add(ingredient);
             } else {
-                Toast.makeText(this, ingredient + " is not listed as a valid food item.", Toast.LENGTH_SHORT);
+                Toast.makeText(this, ingredient + " is not listed as a valid food item.", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
         Food newFood = new Food(foodName, numServings, ingredients);
-        WriteToXML.writeNewFoodToXml(this, newFood);
+        boolean successful = WriteToXML.writeNewFoodToXml(newFood);
+        if(!successful) {
+            Toast.makeText(this, newFood.getName() + " already exists.", Toast.LENGTH_SHORT).show();
+        }
         removeFields();
     }
 

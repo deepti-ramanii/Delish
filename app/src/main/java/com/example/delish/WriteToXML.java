@@ -1,5 +1,6 @@
 package com.example.delish;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -48,24 +49,23 @@ public class WriteToXML {
 
              */
 
-    public static void editIngredientsInXml(Context context, Food food, String changedIngredient, boolean isAdded ) {
+    public static boolean editIngredientsInXml(Food food, String changedIngredient, boolean isAdded ) {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(filePath);
 
-            XPathFactory xfact = XPathFactory.newInstance();
-            XPath xpath = xfact.newXPath();
+            XPathFactory xpathFactory = XPathFactory.newInstance();
+            XPath xpath = xpathFactory.newXPath();
             String xpathStr = "";
 
-            Node rootElement = document.getElementsByTagName("food_list").item(0);
-
-            xpathStr = "/food_list/food[name = '" + food.getName() + "']";
-            Node parentFood = (Node)xpath.evaluate(xpathStr, document, XPathConstants.NODE);
-            if(parentFood == null) {
-                Toast.makeText(context, food.getName() + " does not exist in the library.", Toast.LENGTH_SHORT);
-                return;
+            //if the node doesn't exist, exit and return false
+            xpathStr = "/food_list/food[name = " + food.getName() + " ]";
+            if(!checkIfNodeExists(document, xpathStr)) {
+                return false;
             }
+
+            Node parentFood = (Node) xpath.evaluate(xpathStr, document, XPathConstants.NODE);
 
             //add the ingredient
             if(isAdded) {
@@ -77,11 +77,12 @@ public class WriteToXML {
             //remove the ingredient if it exists
             else {
                 xpathStr = "/food_list/food[ingredient = '" + changedIngredient + "']";
-                Node ingredient = (Node)xpath.evaluate(xpathStr, document, XPathConstants.NODE);
-                if(ingredient == null) {
-                    Toast.makeText(context, food.getName() + " does not contain " + changedIngredient, Toast.LENGTH_SHORT);
-                    return;
+                //if the ingredient doesn't exist, exit and return false
+                if(!checkIfNodeExists(document, xpathStr)) {
+                    return false;
                 }
+
+                Node ingredient = (Node)xpath.evaluate(xpathStr, document, XPathConstants.NODE);
                 parentFood.removeChild(ingredient);
             }
 
@@ -104,47 +105,45 @@ public class WriteToXML {
             ioe.printStackTrace();
         } catch (SAXException sae) {
             sae.printStackTrace();
-        } catch (XPathExpressionException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        return true;
     }
 
-    public static void writeNewFoodToXml(Context context, Food food) {
+    public static boolean writeNewFoodToXml(Food food) {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(filePath);
 
-            XPathFactory xfact = XPathFactory.newInstance();
-            XPath xpath = xfact.newXPath();
             String xpathStr = "";
 
             Node rootElement = document.getElementsByTagName("food_list").item(0);
 
+            //if the food already exists, return false and exit
             xpathStr = "/food_list/food[name = " + food.getName() + " ]";
-            Node parentFood = (Node)xpath.evaluate(xpathStr, document, XPathConstants.NODE);
-            if(parentFood != null) {
-                Toast.makeText(context, food.getName() + " already exists in the library.", Toast.LENGTH_SHORT);
-                return;
+            if(checkIfNodeExists(document, xpathStr)) {
+                return false;
             }
 
-            parentFood = document.createElement("food");
+            Node parentFood = document.createElement("food");
             rootElement.appendChild(parentFood);
 
-            // set element name to root element
+            // set element name to parent food
             Node name = document.createElement("name");
             name.appendChild(document.createTextNode(food.getName()));
-            rootElement.appendChild(name);
+            parentFood.appendChild(name);
 
             // set element calories to root element
             Node calories = document.createElement("calories");
             calories.appendChild(document.createTextNode("" + food.getCaloriesPerServing()));
-            rootElement.appendChild(calories);
+            parentFood.appendChild(calories);
 
             for(String ingredient : food.getIngredients()) {
                 Node temp = document.createElement("ingredient");
                 temp.appendChild(document.createTextNode(ingredient));
-                rootElement.appendChild(temp);
+                parentFood.appendChild(temp);
             }
 
             // write the DOM object to the file
@@ -168,6 +167,30 @@ public class WriteToXML {
             sae.printStackTrace();
         } catch (XPathExpressionException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return true;
+    }
+
+    private static boolean checkIfNodeExists(Document document, String xpathExpression) throws Exception
+    {
+        boolean matches = false;
+
+        XPathFactory xpathFactory = XPathFactory.newInstance();
+        XPath xpath = xpathFactory.newXPath();
+
+        try {
+            XPathExpression expr = xpath.compile(xpathExpression);
+            NodeList nodes = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
+            if(nodes != null  && nodes.getLength() > 0) {
+                matches = true;
+            }
+
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
+
+        return matches;
     }
 }
