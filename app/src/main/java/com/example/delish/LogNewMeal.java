@@ -52,7 +52,7 @@ public class LogNewMeal extends AppCompatActivity {
             temp = new EditText(this);
             int id = View.generateViewId();
             temp.setId(id);
-            temp.setHint("Enter food item " + (i + 1));
+            temp.setHint("Enter food item");
             foodNameInputs.add(id);
             currLayout.addView(temp);
         }
@@ -65,6 +65,7 @@ public class LogNewMeal extends AppCompatActivity {
             if(true) {  //TODO: check if foodName is a valid food
                 foodNames.add(foodName);
             } else {
+                //TODO: open up a dialogue box that asks the user to go to CreateNewFood();
                 Toast.makeText(this, foodName + " is not listed as a valid food item.", Toast.LENGTH_SHORT);
                 return;
             }

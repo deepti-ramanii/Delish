@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/enter_food_name"
+        android:hint="Enter food name"
         android:inputType="text"/>
 
     <EditText
@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/enter_number_of_servings"
+        android:hint="Enter number of servings"
         android:inputType="text"/>
 
     <EditText
@@ -25,28 +25,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/enter_number_of_ingredients"
+        android:hint="Enter number of ingredients"
         android:inputType="text"/>
 
     <Button
         android:id="@+id/get_num_ingredients_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/go"
+        android:text="Go"
         android:onClick="setNumIngredients"/>
 
     <Button
         android:id="@+id/submit_food_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/submit"
+        android:text="Submit"
         android:onClick="submitFood"/>
-
-    <Button
-        android:id="@+id/return_to_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Return Home"
-        android:onClick="toLogNewMeal"/>
 
 </LinearLayout>

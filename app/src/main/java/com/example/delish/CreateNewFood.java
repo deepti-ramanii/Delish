@@ -23,11 +23,9 @@ public class CreateNewFood extends AppCompatActivity {
     EditText getNumServingsInput;
     int numServings;
 
-    Button getNumIngredientsButton;
     EditText getNumIngredientsInput;
     int numIngredients;
 
-    Button submitFoodButton;
     List<Integer> ingredientNameInputs = new ArrayList<Integer>();
     List<String> ingredients = new ArrayList<String>();
 
@@ -78,6 +76,7 @@ public class CreateNewFood extends AppCompatActivity {
             if(WriteToXML.nodeExists("//food[name='" + ingredient + "']")) {
                 ingredients.add(ingredient);
             } else {
+                //TODO: prompt the user to re-input using a simpler visual cue
                 Toast.makeText(this, ingredient + " is not listed as a valid food item.", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -86,7 +85,7 @@ public class CreateNewFood extends AppCompatActivity {
         Log.d("DEBUG", "food: " + foodName + ", calories: " + newFood.getCaloriesPerServing());
         WriteToXML.writeNewFoodToXml(newFood);
         removeFields();
-        finish();
+        finish();   //return to LogNewMeal()
     }
 
     private void removeFields() {

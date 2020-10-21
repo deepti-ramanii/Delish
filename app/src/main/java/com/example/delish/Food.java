@@ -13,7 +13,7 @@ public class Food {
     private List<String> ingredients;
     private int totalCalories;
 
-    public Food(String name, int numberOfServings, List<String> ingredients) throws IOException, SAXException, ParserConfigurationException {
+    public Food(String name, int numberOfServings, List<String> ingredients) {
         this.name = name;
         this.numberOfServings = numberOfServings;
         this.ingredients = ingredients;
@@ -27,7 +27,7 @@ public class Food {
         this.ingredients = ingredients;
     }
 
-    private void calculateTotalCalories() throws ParserConfigurationException, SAXException, IOException {
+    private void calculateTotalCalories() {
         for(String ingredient : this.ingredients) {
             Food ing = WriteToXML.getFoodFromName(ingredient);
             this.totalCalories += ing.totalCalories;
@@ -48,12 +48,14 @@ public class Food {
 
     public void addIngredient(String ingredient) {
         this.ingredients.add(ingredient);
-        //update totalCalories
+        Food ing = WriteToXML.getFoodFromName(ingredient);
+        this.totalCalories += ing.totalCalories;
     }
 
     public void removeIngredient(String ingredient) {
         this.ingredients.remove(ingredient);
-        //update totalCalories
+        Food ing = WriteToXML.getFoodFromName(ingredient);
+        this.totalCalories -= ing.totalCalories;
     }
 
 }

@@ -1,5 +1,9 @@
 package com.example.delish;
 
+import android.annotation.SuppressLint;
+import android.app.Application;
+import android.content.Context;
+
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
@@ -21,20 +25,29 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WriteToXML {
-    public static final String filePath = "Foods.xml";
+public class WriteToXML extends Application {
+    private static Context context;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        context = this;
+    }
 
     public static void writeNewFoodToXml(Food food) {
         try {
+            InputStream inputStream = context.getResources().openRawResource(R.raw.food_inventory);
+
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilderFactory.setNamespaceAware(true);
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(filePath);
+            Document document = documentBuilder.parse(inputStream);
 
-            Node rootElement = document.getElementsByTagName("food_list").item(0);
+            Node rootElement = document.getElementsByTagName("resources").item(0);
 
             Node parentFood = document.createElement("food");
             rootElement.appendChild(parentFood);
@@ -65,7 +78,7 @@ public class WriteToXML {
 
             DOMSource domSource = new DOMSource(document);
 
-            StreamResult streamResult = new StreamResult(new File(filePath));
+            StreamResult streamResult = new StreamResult(new File("C:\\Users\\Deepti\\source\\repos\\Delish\\app\\src\\main\\res\\raw\\food_inventory.xml"));
             transformer.transform(domSource, streamResult);
 
             System.out.println("The XML File was ");
@@ -85,10 +98,12 @@ public class WriteToXML {
 
     public static Food getFoodFromName(String name) {
         try {
+            InputStream inputStream = context.getResources().openRawResource(R.raw.food_inventory);
+
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilderFactory.setNamespaceAware(true);
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.parse(filePath);
+            Document document = documentBuilder.parse(inputStream);
 
             XPathFactory xpathFactory = XPathFactory.newInstance();
             XPath xpath = xpathFactory.newXPath();
@@ -136,10 +151,12 @@ public class WriteToXML {
     {
         boolean matches = false;
 
+        InputStream inputStream = context.getResources().openRawResource(R.raw.food_inventory);
+
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        Document document = documentBuilder.parse(filePath);
+        Document document = documentBuilder.parse(inputStream);
 
         XPathFactory xpathFactory = XPathFactory.newInstance();
         XPath xpath = xpathFactory.newXPath();

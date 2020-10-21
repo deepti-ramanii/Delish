@@ -8,12 +8,12 @@
         android:id="@+id/go_to_log_new_meal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/go_to_log_new_meal" />
+        android:text="Go to Log New Meal" />
 
     <Button
         android:id="@+id/go_to_edit_food"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go To Edit Food" />
+        android:text="Go to Edit Food" />
 
 </LinearLayout>
