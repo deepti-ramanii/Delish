@@ -1,6 +1,5 @@
 package com.example.delish;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 
@@ -41,6 +40,9 @@ public class WriteToXML extends Application {
     public static void writeNewFoodToXml(Food food) {
         try {
             InputStream inputStream = context.getResources().openRawResource(R.raw.food_inventory);
+            if(inputStream == null) {
+
+            }
 
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilderFactory.setNamespaceAware(true);
@@ -59,18 +61,9 @@ public class WriteToXML extends Application {
 
             // set element calories to root element
             Node calories = document.createElement("calories");
-            calories.appendChild(document.createTextNode("" + food.getCaloriesPerServing()));
+            calories.appendChild(document.createTextNode("" + food.getCalories()));
             parentFood.appendChild(calories);
 
-            Node servings = document.createElement("servings");
-            name.appendChild(document.createTextNode("" + food.getNumberOfServings()));
-            parentFood.appendChild(name);
-
-            for(String ingredient : food.getIngredients()) {
-                Node temp = document.createElement("ingredient");
-                temp.appendChild(document.createTextNode(ingredient));
-                parentFood.appendChild(temp);
-            }
 
             // write the DOM object to the file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -78,10 +71,8 @@ public class WriteToXML extends Application {
 
             DOMSource domSource = new DOMSource(document);
 
-            StreamResult streamResult = new StreamResult(new File("C:\\Users\\Deepti\\source\\repos\\Delish\\app\\src\\main\\res\\raw\\food_inventory.xml"));
+            StreamResult streamResult = new StreamResult(new File("food_inventory.xml"));
             transformer.transform(domSource, streamResult);
-
-            System.out.println("The XML File was ");
 
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -113,22 +104,12 @@ public class WriteToXML extends Application {
                 return null;
             }
 
-            Node parentFood = (Node) xpath.evaluate(xpathStr, document, XPathConstants.NODE);
+            Node parent = (Node) xpath.evaluate(xpathStr, document, XPathConstants.NODE);
 
-            Node calories = parentFood.getFirstChild().getNextSibling();
+            Node calories = parent.getFirstChild().getNextSibling();
             int cal = Integer.parseInt(calories.getTextContent());
 
-            Node servings = parentFood.getFirstChild().getNextSibling();
-            int s = Integer.parseInt(servings.getTextContent());
-
-            Node ingredient = calories.getNextSibling();
-            List<String> ingredients = new ArrayList<String>();
-            while (ingredient != null) {
-                ingredients.add(ingredient.getTextContent());
-                ingredient = ingredient.getNextSibling();
-            }
-
-            return new Food(name, cal, s, ingredients);
+            return new Food(name, cal);
 
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();

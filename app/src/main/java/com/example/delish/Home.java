@@ -16,8 +16,6 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_home);
 
-
-
         goToLogNewMeal = (Button)findViewById(R.id.go_to_log_new_meal);
         goToLogNewMeal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -27,13 +25,15 @@ public class Home extends AppCompatActivity {
             }
         });
 
+        /*
         goToEditFood = (Button)findViewById(R.id.go_to_edit_food);
         goToEditFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent switchActivityIntent = new Intent(Home.this, EditFoods.class);
+                Intent switchActivityIntent = new Intent(Home.this, LogNewMeal.class);
                 startActivity(switchActivityIntent);
             }
         });
+        */
     }
 }

@@ -11,7 +11,7 @@
         android:theme="@style/Theme.Delish">
 
         <activity
-            android:name="com.example.delish.CreateNewFood">
+            android:name="com.example.delish.AddFood">
         </activity>
 
         <activity
