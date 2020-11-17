@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_create_new_food">
+    android:id="@+id/layout_add_food">
 
     <EditText
         android:id="@+id/get_food_name"
@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Go"
-        android:onClick="setNumIngredients"/>
+        android:onClick="setIngredientFields"/>
 
     <Button
         android:id="@+id/submit_food_button"

@@ -5,43 +5,40 @@ import java.util.Map;
 
 public class Food {
     private String name;
-    private int totalCalories;
+    private int calories;
 
     //create a new food object if the number of calories per serving is unknown
-    public Food(String name, int numServings, Map<String, Integer> ingredients) {
+    public Food(String name, int numServings, Map<Food, Integer> ingredients) {
         this.name = name;
-        this.totalCalories = calculateTotalCalories(ingredients) / numServings;
+        this.calories = calculateTotalCalories(ingredients) / numServings;
     }
 
     //create a new food object if the number of calories per serving is known
     public Food(String name, int numCalories) {
         this.name = name;
-        this.totalCalories = numCalories;
+        this.calories = numCalories;
     }
 
     //add calories from each ingredient to get total calories from the food item
-    private int calculateTotalCalories(Map<String, Integer> ingredients) {
+    private int calculateTotalCalories(Map<Food, Integer> ingredients) {
         int numCalories = 0;
-        for(String name : ingredients.keySet()) {
-            Food ingredient = WriteToXML.getFoodFromName(name);
-            numCalories += ingredient.totalCalories * ingredients.get(name);
+        for(Food ingredient : ingredients.keySet()) {
+            numCalories += ingredient.calories * ingredients.get(name);
         }
         return numCalories;
     }
 
-    public String getName() {
-        return this.name;
-    }
+    public String getName() { return this.name; }
 
-    public int getCalories() { return this.totalCalories; }
+    public int getCalories() { return this.calories; }
 
     public String toString() {
-        String temp = "";
-        temp += "<food>\n";
-        temp += "\t<name>" + this.name + "</name>\n";
-        temp += "\t<calories>" + this.totalCalories + "</calories>\n";
-        temp += "</food>";
-        return temp;
+        String str = "";
+        str += "<food>\n";
+        str += "\t<name>" + this.name + "</name>\n";
+        str += "\t<calories>" + this.calories + "</calories>\n";
+        str += "</food>";
+        return str;
     }
 
 }
