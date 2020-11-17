@@ -3,8 +3,9 @@ package com.example.delish;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -28,7 +29,10 @@ public class AddFood extends AppCompatActivity {
     List<Integer> ingredientIDs = new ArrayList<Integer>();
     Map<Food, Integer> ingredients = new HashMap<Food, Integer>();
 
-    LinearLayout currLayout;
+    Button submitButton;
+    int verticalPosition = 125;
+
+    RelativeLayout currLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,26 +43,44 @@ public class AddFood extends AppCompatActivity {
         getNumServings = (EditText)findViewById((R.id.get_num_servings));
         getNumIngredients = (EditText)findViewById(R.id.get_num_ingredients);
 
-        currLayout = (LinearLayout)findViewById(R.id.layout_add_food);
+        submitButton = (Button)findViewById(R.id.submit_food_button);
+
+        currLayout = (RelativeLayout)findViewById(R.id.layout_add_food);
     }
 
     //creates a variable number of fields for the user to input ingredients of the food item
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void setIngredientFields(View view) {
         //reset the previous inputs
-        removeFields();
-        ingredientIDs.clear();
+        resetFields();
 
         //create the necessary number of fields to store ingredient inputs
         numIngredients = Integer.parseInt(getNumIngredients.getText().toString());
         for(int i = 0; i < numIngredients; i++) {
-            EditText temp = new EditText(this);
+            //get a new id for the field
             int id = View.generateViewId();
-            temp.setId(id);
-            temp.setHint("Enter ingredient name and amount (i.e: egg, 2)");
             ingredientIDs.add(id);
-            currLayout.addView(temp);
+
+            //set the field's properties
+            EditText ingredientField = new EditText(this);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(convertToPx(300), convertToPx(50));
+            layoutParams.setMargins(0, convertToPx(verticalPosition), 0, 0);
+            ingredientField.setLayoutParams(layoutParams);
+            ingredientField.setId(id);
+            ingredientField.setHint("Enter an ingredient and amount (i.e: egg, 1)");
+
+            //add the field to the layout
+            currLayout.addView(ingredientField);
+            verticalPosition += 50;
         }
+
+        //move the submit button if necessary
+        ((RelativeLayout.LayoutParams)submitButton.getLayoutParams()).setMargins(0, convertToPx(verticalPosition), 0, 0);
+    }
+
+    //converts a dp value to a px value
+    private int convertToPx(int dp) {
+        return (int)(dp * this.getResources().getDisplayMetrics().density);
     }
 
     //stores the user's input information in the xml file
@@ -67,23 +89,27 @@ public class AddFood extends AppCompatActivity {
         ingredients.clear();
 
         //get the user's input for the name of the food item and the number of servings given by the listed ingredients
-        foodName = getFoodName.getText().toString().toLowerCase();
-        numServings = Integer.parseInt(getNumServings.getText().toString());
+        foodName = getFoodName.getText().toString().toLowerCase().trim();
+        numServings = Integer.parseInt(getNumServings.getText().toString().trim());
 
         //get the user's input for the ingredients that make up the food item
         for(int id : ingredientIDs) {
             //format and separate the input for each ingredient into a name and an amount
-            String input = ((EditText)findViewById(id)).getText().toString().toLowerCase();
-            String[] inputs = input.split(",");
-            inputs[0] = inputs[0].trim();
-            inputs[1] = inputs[1].trim();
+            String[] inputs = ((EditText)findViewById(id)).getText().toString().toLowerCase().split(",");
+            if(inputs.length != 2) {
+                ((EditText)findViewById(id)).setError("Please enter an ingredient and amount separated by a comma (i.e:cereal, 1)");
+                return;
+            }
+            String name = inputs[0].trim();
+            int amount = Integer.parseInt(inputs[1].trim());
 
             //if the ingredient is valid, add it to the list of ingredients, otherwise prompt the user to re-input
-            if(WriteToXML.nodeExists("//food[name='" + inputs[0] + "']")) {
-                Food ingredient = WriteToXML.getFoodFromName(inputs[0]);
-                ingredients.put(ingredient, Integer.parseInt(inputs[1]));
+            if(WriteToXML.nodeExists("/food_inventory/food[@name='" + name + "']")) {
+                ((EditText)findViewById(id)).setError(null);
+                Food ingredient = WriteToXML.getFoodFromName(name);
+                ingredients.put(ingredient, amount);
             } else {
-                //TODO: prompt user to re-input the ingredient
+                ((EditText)findViewById(id)).setError("Did not recognize " + name + ". Would you like to add it?");
                 return;
             }
         }
@@ -91,17 +117,24 @@ public class AddFood extends AppCompatActivity {
         //use the newly inputted information to create a new food item and store it in the xml
         Food newFood = new Food(foodName, numServings, ingredients);
         WriteToXML.writeNewFoodToXml(newFood);
-        removeFields();
-        //TODO: return to LogNewMeal() when done adding the new food
+
+        //reset fields and user inputs to prepare for a new food item
+        getFoodName.getText().clear();
+        getNumIngredients.getText().clear();
+        getNumServings.getText().clear();
+        resetFields();
+        //TODO: do we stay here or go back to LogNewMeal?
     }
 
-    //remove the ingredient fields to prepare for new input
-    private void removeFields() {
+    //resets the ingredient fields to prepare for new input
+    private void resetFields() {
         for(int id : ingredientIDs) {
             if((EditText)findViewById(id) != null) {
                 currLayout.removeView((EditText)findViewById(id));
             }
         }
         ingredientIDs.clear();
+        ((RelativeLayout.LayoutParams)submitButton.getLayoutParams()).setMargins(0, convertToPx(125), 0, 0);
+        verticalPosition = 125;
     }
 }

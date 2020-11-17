@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <food_inventory xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@raw/food_inventory">
-    <food>
-        <name>test</name>
+    <food name="test">
         <calories>1000</calories>
     </food>
 
-    <food>
-        <name>apple</name>
+    <food name="apple">
         <calories>100</calories>
     </food>
 
-    <food>
-        <name>banana</name>
+    <food name="banana">
         <calories>150</calories>
     </food>
 </food_inventory>

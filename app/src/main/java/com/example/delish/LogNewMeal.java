@@ -4,8 +4,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -18,10 +19,14 @@ import java.util.Map;
 public class LogNewMeal extends AppCompatActivity {
     EditText getNumFoods;
     int numFoods;
+
     List<Integer> foodIDs = new ArrayList<Integer>();
     Map<Food, Integer> foods = new HashMap<Food, Integer>();
 
-    LinearLayout currLayout;
+    Button submitButton;
+    int verticalPosition = 75;
+
+    RelativeLayout currLayout;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,26 +34,45 @@ public class LogNewMeal extends AppCompatActivity {
         setContentView(R.layout.layout_log_new_meal);
 
         getNumFoods = (EditText)findViewById(R.id.get_num_foods);
-        currLayout = (LinearLayout)findViewById(R.id.layout_log_new_meal);
+
+        submitButton = (Button)findViewById(R.id.submit_meal_button);
+
+        currLayout = (RelativeLayout)findViewById(R.id.layout_log_new_meal);
     }
 
     //create a variable number of fields to store the user's food inputs for one meal
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void setFoodItemFields(View view) {
         //reset the previous inputs
-        removeFields();
-        foodIDs.clear();
+        resetFields();
 
         //get the number of food inputs and create that many input fields
-        numFoods = Integer.parseInt(getNumFoods.getText().toString());
+        numFoods = Integer.parseInt(getNumFoods.getText().toString().trim());
         for(int i = 0; i < numFoods; i++) {
-            EditText temp = new EditText(this);
+            //get and store an id for the field
             int id = View.generateViewId();
-            temp.setId(id);
-            temp.setHint("Enter food name and amount (i.e: rice, 1)");
             foodIDs.add(id);
-            currLayout.addView(temp);
+
+            //set the field's properties
+            EditText foodField = new EditText(this);
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(convertToPx(300), convertToPx(50));
+            layoutParams.setMargins(0, convertToPx(verticalPosition), 0, 0);
+            foodField.setLayoutParams(layoutParams);
+            foodField.setId(id);
+            foodField.setHint("Enter a food item and amount (i.e: cereal, 1)");
+
+            //add the field to the layout
+            currLayout.addView(foodField);
+            verticalPosition += 50;
         }
+
+        //move submit button down as necessary
+        ((RelativeLayout.LayoutParams)submitButton.getLayoutParams()).setMargins(0, convertToPx(verticalPosition), 0, 0);
+    }
+
+    //convert a dp value to a px value
+    private int convertToPx(int dp) {
+        return (int)(dp * this.getResources().getDisplayMetrics().density);
     }
 
     //store the newly inputted meal in a map
@@ -56,29 +80,36 @@ public class LogNewMeal extends AppCompatActivity {
         //reset any previously inputted foods
         foods.clear();
 
-        //add the newly inputted foods to the list of foods in the meal
+        //add the inputted foods to the list of foods in the meal
         for (int id : foodIDs) {
             //format and separate the input for each food item into a name and an amount
-            String input = ((EditText)findViewById(id)).getText().toString().toLowerCase();
-            String[] inputs = input.split(",");
-            inputs[0] = inputs[0].trim();
-            inputs[1] = inputs[1].trim();
+            String[] inputs = ((EditText)findViewById(id)).getText().toString().toLowerCase().split(",");
+            if(inputs.length != 2) {
+                ((EditText)findViewById(id)).setError("Please enter a food item and amount separated by a comma (i.e:cereal, 1)");
+                return;
+            }
+            String name = inputs[0].trim();
+            int amount = Integer.parseInt(inputs[1].trim());
 
             //if the food item is valid, add it to the list, otherwise prompt the user to add the food item
-            if(WriteToXML.nodeExists("//food[name='" + inputs[0] + "']")) {
-                Food food = WriteToXML.getFoodFromName(inputs[0]);
-                foods.put(food, Integer.parseInt(inputs[1]));
+            if(WriteToXML.nodeExists("/food_inventory/food[@name='" + name + "']")) {
+                ((EditText)findViewById(id)).setError(null);
+                Food food = WriteToXML.getFoodFromName(name);
+                foods.put(food, amount);
             } else {
+                ((EditText)findViewById(id)).setError("Did not recognize '" + name + "'. Would you like to add it?");
                 return;
             }
         }
 
-        //when we finish submitting a meal, remove the fields to prepare for new input
-        removeFields();
+        //when we finish submitting a meal, remove the fields and reset user input to prepare for the next submission
+        getNumFoods.getText().clear();
+        resetFields();
+        //TODO: somehow store the new meal in a calendar-like format
     }
 
     public void toHomePage(View view) {
-        removeFields();
+        resetFields();
         finish();
     }
 
@@ -87,13 +118,15 @@ public class LogNewMeal extends AppCompatActivity {
         startActivity(switchActivityIntent);
     }
 
-    //remove food name fields to prepare for new input
-    private void removeFields() {
+    //resets the food name fields to prepare for new input
+    private void resetFields() {
         for(int id : foodIDs) {
             if((EditText)findViewById(id) != null) {
                 currLayout.removeView((EditText) findViewById(id));
             }
         }
         foodIDs.clear();
+        ((RelativeLayout.LayoutParams)submitButton.getLayoutParams()).setMargins(0, convertToPx(75), 0, 0);
+        verticalPosition = 75;
     }
 }

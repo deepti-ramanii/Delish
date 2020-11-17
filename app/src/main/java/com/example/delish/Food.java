@@ -23,7 +23,7 @@ public class Food {
     private int calculateTotalCalories(Map<Food, Integer> ingredients) {
         int numCalories = 0;
         for(Food ingredient : ingredients.keySet()) {
-            numCalories += ingredient.calories * ingredients.get(name);
+            numCalories += ingredient.calories * ingredients.get(ingredient);
         }
         return numCalories;
     }

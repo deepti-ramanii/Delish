@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class Home extends AppCompatActivity {
     Button goToLogNewMeal;
-    Button goToEditFood;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

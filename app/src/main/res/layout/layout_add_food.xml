@@ -1,45 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layout_add_food">
 
     <EditText
         android:id="@+id/get_food_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="275dp"
+        android:layout_height="50dp"
         android:ems="10"
-        android:hint="Enter food name"
-        android:inputType="text"/>
+        android:hint="Name"
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/get_num_servings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="125dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="285dp"
         android:ems="10"
-        android:hint="Enter number of servings"
-        android:inputType="text"/>
+        android:hint="Servings"
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/get_num_ingredients"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
         android:ems="10"
-        android:hint="Enter number of ingredients"
-        android:inputType="text"/>
+        android:hint="Number of ingredients"
+        android:inputType="text" />
 
     <Button
         android:id="@+id/get_num_ingredients_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go"
-        android:onClick="setIngredientFields"/>
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="210dp"
+        android:layout_marginTop="50dp"
+        android:onClick="setIngredientFields"
+        android:text="Go" />
 
     <Button
         android:id="@+id/submit_food_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit"
-        android:onClick="submitFood"/>
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="125dp"
+        android:onClick="submitFood"
+        android:text="Submit" />
 
-</LinearLayout>
+</RelativeLayout>
