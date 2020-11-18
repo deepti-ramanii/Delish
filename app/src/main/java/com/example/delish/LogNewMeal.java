@@ -17,30 +17,33 @@ import java.util.List;
 import java.util.Map;
 
 public class LogNewMeal extends AppCompatActivity {
+    RelativeLayout currLayout;
+    FoodInventoryDatabaseHelper foodInventoryDatabaseHelper;
+
+    //input fields
     EditText getNumFoods;
-    int numFoods;
-
-    List<Integer> foodIDs = new ArrayList<Integer>();
-    Map<Food, Integer> foods = new HashMap<Food, Integer>();
-
     Button submitButton;
+
+    //UI input storage
+    List<Integer> foodIDs = new ArrayList<Integer>();
     int verticalPosition = 75;
 
-    RelativeLayout currLayout;
+    //properties
+    int numFoods;
+    Map<Food, Integer> foods = new HashMap<Food, Integer>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_log_new_meal);
 
-        getNumFoods = (EditText)findViewById(R.id.get_num_foods);
-
-        submitButton = (Button)findViewById(R.id.submit_meal_button);
-
         currLayout = (RelativeLayout)findViewById(R.id.layout_log_new_meal);
+        foodInventoryDatabaseHelper = FoodInventoryDatabaseHelper.getInstance(this);
+
+        getNumFoods = (EditText)findViewById(R.id.get_num_foods);
+        submitButton = (Button)findViewById(R.id.submit_meal_button);
     }
 
-    //create a variable number of fields to store the user's food inputs for one meal
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void setFoodItemFields(View view) {
         //reset the previous inputs
@@ -55,7 +58,7 @@ public class LogNewMeal extends AppCompatActivity {
 
             //set the field's properties
             EditText foodField = new EditText(this);
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(convertToPx(300), convertToPx(50));
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(convertToPx(400), convertToPx(50));
             layoutParams.setMargins(0, convertToPx(verticalPosition), 0, 0);
             foodField.setLayoutParams(layoutParams);
             foodField.setId(id);
@@ -70,42 +73,31 @@ public class LogNewMeal extends AppCompatActivity {
         ((RelativeLayout.LayoutParams)submitButton.getLayoutParams()).setMargins(0, convertToPx(verticalPosition), 0, 0);
     }
 
-    //convert a dp value to a px value
     private int convertToPx(int dp) {
         return (int)(dp * this.getResources().getDisplayMetrics().density);
     }
 
-    //store the newly inputted meal in a map
     public void submitMeal(View view) throws Exception {
-        //reset any previously inputted foods
         foods.clear();
-
-        //add the inputted foods to the list of foods in the meal
         for (int id : foodIDs) {
-            //format and separate the input for each food item into a name and an amount
             String[] inputs = ((EditText)findViewById(id)).getText().toString().toLowerCase().split(",");
             if(inputs.length != 2) {
-                ((EditText)findViewById(id)).setError("Please enter a food item and amount separated by a comma (i.e:cereal, 1)");
+                ((EditText)findViewById(id)).setError("Invalid input.");
                 return;
             }
             String name = inputs[0].trim();
             int amount = Integer.parseInt(inputs[1].trim());
-
-            //if the food item is valid, add it to the list, otherwise prompt the user to add the food item
-            if(WriteToXML.nodeExists("/food_inventory/food[@name='" + name + "']")) {
-                ((EditText)findViewById(id)).setError(null);
-                Food food = WriteToXML.getFoodFromName(name);
-                foods.put(food, amount);
+            if(foodInventoryDatabaseHelper.contains(name)) {
+                foods.put(foodInventoryDatabaseHelper.getFromName(name), amount);
             } else {
-                ((EditText)findViewById(id)).setError("Did not recognize '" + name + "'. Would you like to add it?");
+                ((EditText)findViewById(id)).setError("Could not find " + name);
                 return;
             }
         }
-
-        //when we finish submitting a meal, remove the fields and reset user input to prepare for the next submission
+        //TODO: maybe need to take date input?
+        //TODO: how do we want to store meals? As a map? list?
         getNumFoods.getText().clear();
         resetFields();
-        //TODO: somehow store the new meal in a calendar-like format
     }
 
     public void toHomePage(View view) {
@@ -118,7 +110,6 @@ public class LogNewMeal extends AppCompatActivity {
         startActivity(switchActivityIntent);
     }
 
-    //resets the food name fields to prepare for new input
     private void resetFields() {
         for(int id : foodIDs) {
             if((EditText)findViewById(id) != null) {
