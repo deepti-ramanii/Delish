@@ -20,7 +20,7 @@ public class Home extends AppCompatActivity {
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                Intent switchActivityIntent = new Intent(Home.this, MealList.class);
+                Intent switchActivityIntent = new Intent(Home.this, ManageMeals.class);
                 switchActivityIntent.putExtra("DAY", dayOfMonth);
                 switchActivityIntent.putExtra("MONTH", month);
                 switchActivityIntent.putExtra("YEAR", year);

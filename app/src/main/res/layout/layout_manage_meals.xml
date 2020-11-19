@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_manage_meals"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <TextView
+            android:id="@+id/date"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="00/00/00"
+            android:textSize="30dp" />
+
+    <ExpandableListView
+        android:id="@+id/meals_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:id="@+id/layout_manage_food_inputs"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/add_meal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="displayMealInputFields"
+            android:text="ADD MEAL" />
+
+        <LinearLayout
+            android:id="@+id/layout_get_num_foods"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="100"
+            android:visibility="invisible" >
+            <EditText
+                android:id="@+id/num_foods"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Enter number of foods"
+                android:layout_weight="25.0" />
+            <Button
+                android:id="@+id/get_num_foods"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:onClick="displayFoodInputFields"
+                android:text="GO"
+                android:layout_weight="75.0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_food_inputs"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_meal_submission"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="100"
+            android:visibility="invisible" >
+            <Button
+                android:id="@+id/submit_meal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:onClick="submitMeal"
+                android:text="SUBMIT"
+                android:layout_weight="50.0" />
+            <Button
+                android:id="@+id/cancel_meal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:onClick="cancelMealSubmission"
+                android:text="CANCEL"
+                android:layout_weight="50.0" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

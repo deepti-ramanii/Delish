@@ -20,7 +20,7 @@ public class MealDatabaseHelper extends SQLiteOpenHelper {
     public static final String DAY = "DAY";
     public static final String MONTH = "MONTH";
     public static final String YEAR = "YEAR";
-    public static final String MEAL = "MEAL";   //formatted as "food1,amount;food2,amount;food3,amount;"
+    public static final String MEAL = "MEAL";
 
     //Database Information
     static final String MEAL_DB_NAME = "MEALS.DB";
@@ -72,11 +72,10 @@ public class MealDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getReadableDatabase();
         Cursor cursor = database.rawQuery(query, null);
         for(int i = 0; i < cursor.getCount(); i++) {
-            cursor.moveToPosition(i);
-            String[] mealString = cursor.getString(4).split(";");
             List<Food> meal = new ArrayList<Food>();
             int mealCalories = 0;
-            for(String foodString : mealString) {
+            cursor.moveToPosition(i);
+            for(String foodString : cursor.getString(4).split(";")) {
                 String name = foodString.split(",")[0];
                 int amount = Integer.parseInt(foodString.split(",")[1]);
                 Food food = foodDatabaseHelper.getFromName(name);
