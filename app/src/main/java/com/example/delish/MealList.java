@@ -1,12 +1,12 @@
 package com.example.delish;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -25,11 +25,11 @@ public class MealList extends AppCompatActivity {
 
     private TextView date;
     private Button addMealButton;
+    private ExpandableListView mealsList;
 
     private int day;
     private int month;
     private int year;
-    private List<Integer> mealIDs = new ArrayList<Integer>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class MealList extends AppCompatActivity {
         foodDatabaseHelper = FoodDatabaseHelper.getInstance(this);
 
         date = (TextView)findViewById(R.id.date);
-
+        mealsList = (ExpandableListView)findViewById(R.id.meals_list_view);
         addMealButton = (Button)findViewById(R.id.add_meal_button);
         addMealButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -63,40 +63,15 @@ public class MealList extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void displayMeals() {
-        resetMeals();
-        Map<List<Food>, Integer> getMeals = mealDatabaseHelper.getFromDate(day, month, year);
+        Map<List<Food>, Integer> mealsFromDate = mealDatabaseHelper.getFromDate(day, month, year);
         List<Integer> mealCalories = new ArrayList<Integer>();
-        List<Food> foods = new ArrayList<Food>();
-        for(List<Food> meal : getMeals.keySet()) {
-            foods = meal;
-            mealCalories.add(getMeals.get(meal));
-            FoodListAdapter foodListAdapter = new FoodListAdapter(this, R.layout.adapter_view_layout, meals.get(i));
+        List<List<Food>> meals = new ArrayList<List<Food>>();
+        for(List<Food> meal : mealsFromDate.keySet()) {
+            meals.add(meal);
+            mealCalories.add(mealsFromDate.get(meal));
         }
+        FoodListAdapter foodListAdapter = new FoodListAdapter(mealCalories, meals);
+        foodListAdapter.setInflater((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE), this);
+        mealsList.setAdapter(foodListAdapter);
     }
-
-    private void resetMeals() {
-        for(int id : mealIDs) {
-            if((EditText)findViewById(id) != null) {
-                currLayout.removeView((ListView)findViewById(id));
-            }
-        }
-        mealIDs.clear();
-    }
-
-    /*
-    public void submitMeal(View view) {
-        String meal = "";
-        for () {
-            String name = ""; //get the name
-            int amount = 0; //get the amount
-            if(foodDatabaseHelper.contains(name)) {
-                meal += (name + "," + amount + ";");
-            } else {
-                set error message
-            }
-        }
-        mealDatabaseHelper.insert(meal, day, month, year);
-        getNumFoods.getText().clear();
-    }
-    */
 }

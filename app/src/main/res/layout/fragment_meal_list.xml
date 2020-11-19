@@ -23,4 +23,8 @@
         android:layout_height="wrap_content"
         android:text="ADD MEAL" />
 
+    <ExpandableListView
+        android:id="@+id/meals_list_view"
+        android:layout_width="fill_parent" />
+
 </TableLayout>
