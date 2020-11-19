@@ -13,11 +13,6 @@
             android:text="00/00/00"
             android:textSize="30dp" />
 
-    <ExpandableListView
-        android:id="@+id/meals_list"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-
     <LinearLayout
         android:id="@+id/layout_manage_food_inputs"
         android:orientation="vertical"
@@ -37,12 +32,13 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:weightSum="100"
-            android:visibility="invisible" >
+            android:visibility="gone" >
             <EditText
                 android:id="@+id/num_foods"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Enter number of foods"
+                android:hint="Enter number of foods"
+                android:inputType="number"
                 android:layout_weight="25.0" />
             <Button
                 android:id="@+id/get_num_foods"
@@ -66,7 +62,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:weightSum="100"
-            android:visibility="invisible" >
+            android:visibility="gone" >
             <Button
                 android:id="@+id/submit_meal"
                 android:layout_width="fill_parent"
@@ -84,5 +80,10 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <ExpandableListView
+        android:id="@+id/meals_list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

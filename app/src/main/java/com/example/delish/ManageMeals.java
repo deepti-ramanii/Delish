@@ -1,6 +1,7 @@
 package com.example.delish;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -30,7 +31,7 @@ public class ManageMeals extends AppCompatActivity {
 
     private LinearLayout manageFoodInputs;
 
-    private EditText numFoodInputs;
+    private EditText numFoods;
     private List<Integer> foodInputIDs;
     private LinearLayout getNumFoods;
     private LinearLayout foodInputs;
@@ -50,7 +51,7 @@ public class ManageMeals extends AppCompatActivity {
         manageFoodInputs = (LinearLayout)findViewById(R.id.layout_manage_food_inputs);
 
         getNumFoods = (LinearLayout) manageFoodInputs.findViewById(R.id.layout_get_num_foods);
-        numFoodInputs = (EditText)findViewById(R.id.num_foods);
+        numFoods = (EditText)findViewById(R.id.num_foods);
         foodInputIDs = new ArrayList<Integer>();
         foodInputs = (LinearLayout) manageFoodInputs.findViewById(R.id.layout_food_inputs);
         mealSubmission = (LinearLayout) manageFoodInputs.findViewById(R.id.layout_meal_submission);
@@ -83,44 +84,57 @@ public class ManageMeals extends AppCompatActivity {
     }
 
     public void submitMeal(View view) {
-        String meal = "";
-        List<Food> tempMeal = new ArrayList<Food>();
-        int tempMealCalories = 0;
+        boolean successful = true;
+        String mealStr = "";
+        List<Food> meal = new ArrayList<Food>();
+        int mealCal = 0;
         for(int id : foodInputIDs) {
+            //TODO: two separate input fields, one for name and one for amount
             String[] input = ((EditText)findViewById(id)).getText().toString().toLowerCase().split(",");
             String name = input[0].trim();
             int amount = Integer.parseInt(input[1].trim());
             if(foodDatabaseHelper.contains(name)) {
-                meal += name + "," + amount + ";";
                 Food food = foodDatabaseHelper.getFromName(name);
                 food.setAmount(amount);
-                tempMeal.add(food);
-                tempMealCalories += food.getTotalCalories();
+                meal.add(food);
+                mealStr += name + "," + amount + ";";
+                mealCal += food.getTotalCalories();
             } else {
+                successful = false;
                 ((EditText)findViewById(id)).setError("Could not find " + name + ". Would you like to add it?");
+                //TODO: pop up a dialogue for add_food
+                Intent switchActivityIntent = new Intent(ManageMeals.this, AddFood.class);
+                startActivity(switchActivityIntent);
             }
         }
-        meals.add(tempMeal);
-        mealCalories.add(tempMealCalories);
-        mealDatabaseHelper.insert(meal, day, month, year);
-        displayMeals();
+        if(successful) {
+            mealDatabaseHelper.insert(mealStr, day, month, year);
+            meals.add(meal);
+            mealCalories.add(mealCal);
+            displayMeals();
+            removeMealInputFields();
+        }
     }
 
     public void cancelMealSubmission(View view) {
-        removeFoodInputFields();
-        getNumFoods.setVisibility(View.INVISIBLE);
-        mealSubmission.setVisibility(View.INVISIBLE);
+        removeMealInputFields();
     }
 
     public void displayMealInputFields(View view) {
         getNumFoods.setVisibility(View.VISIBLE);
     }
 
+    private void removeMealInputFields() {
+        removeFoodInputFields();
+        getNumFoods.setVisibility(View.GONE);
+        mealSubmission.setVisibility(View.GONE);
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void displayFoodInputFields(View view) {
         removeFoodInputFields();
-        int numFoods = Integer.parseInt(numFoodInputs.getText().toString().toLowerCase().trim());
-        for(int i = 0; i < numFoods; i++) {
+        int count = Integer.parseInt(numFoods.getText().toString().toLowerCase().trim());
+        for(int i = 0; i < count; i++) {
             int id = View.generateViewId();
             foodInputIDs.add(id);
             EditText foodInput = new EditText(this);
