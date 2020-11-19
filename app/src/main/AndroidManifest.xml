@@ -13,7 +13,7 @@
             android:name="com.example.delish.AddFood">
         </activity>
         <activity
-            android:name="com.example.delish.LogNewMeal">
+            android:name="com.example.delish.MealList">
         </activity>
         <activity
             android:name="com.example.delish.Home"

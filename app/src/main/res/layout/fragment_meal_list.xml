@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_meal_list"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <TableRow
+        android:tag="date"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="00/00/00"
+            android:textSize="30dp" />
+    </TableRow>
+
+    <Button
+        android:id="@+id/add_meal_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="ADD MEAL" />
+
+</TableLayout>
