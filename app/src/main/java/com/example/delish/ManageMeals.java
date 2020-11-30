@@ -63,7 +63,7 @@ public class ManageMeals extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         day = getIntent().getIntExtra("DAY", 0);
-        month = getIntent().getIntExtra("MONTH", 0);
+        month = getIntent().getIntExtra("MONTH", 0) + 1;
         year = getIntent().getIntExtra("YEAR", 0);
         date.setText(String.format("%02d/%02d/%02d", day, month, year));
 
